@@ -1,13 +1,28 @@
-// src/components/ClientePage.js
-import React from "react";
+import React, { useState } from "react";
 import productos from "../lists/products";
 import "../styles/cliente.css";
 
 const ClientePage = () => {
-  return (
-    <div className="pagina">
-      {/* Cuadro de color amarillo */}
+  const productosPorPagina = 10;
+  const [paginaActual, setPaginaActual] = useState(1);
 
+  // Calcular el índice inicial y final para los productos de la página actual
+  const indiceInicial = (paginaActual - 1) * productosPorPagina;
+  const indiceFinal = paginaActual * productosPorPagina;
+
+  const productosPaginaActual = productos.slice(indiceInicial, indiceFinal);
+
+  const cambiarPagina = (direccion) => {
+    if (direccion === "adelante") {
+      setPaginaActual(paginaActual + 1);
+    } else if (direccion === "atras" && paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
+  return (
+    <div >
+      {/* Cuadro de color amarillo */}
       <div className="cuadro-amarillo"></div>
 
       {/* Rectángulo con fondo difuminado */}
@@ -15,7 +30,7 @@ const ClientePage = () => {
         {/* Contenido que se sobrepondrá al amarillo suave */}
         <div className="contenido">
           <div className="inputs-container">
-            <input type="text" placeholder="Buscar productos aqui..." />
+            <input type="text" placeholder="Buscar productos aquí..." />
             <select>
               <option value="Electrónica">Electrónica</option>
               <option value="Ropa y Calzado">Ropa y Calzado</option>
@@ -31,25 +46,25 @@ const ClientePage = () => {
         <div className="contenido-ultimos-productos">
           <p>Últimos productos en línea</p>
           <div className="botones-container">
-            <button className="boton-azul">
+            <button className="boton-azul" onClick={() => cambiarPagina("atras")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
                 height="18"
                 fill="currentColor"
-                class="bi bi-caret-left-fill"
+                className="bi bi-caret-left-fill"
                 viewBox="0 0 16 16"
               >
                 <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
               </svg>
             </button>
-            <button className="boton-azul">
+            <button className="boton-azul" onClick={() => cambiarPagina("adelante")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
                 height="18"
                 fill="currentColor"
-                class="bi bi-caret-right-fill"
+                className="bi bi-caret-right-fill"
                 viewBox="0 0 16 16"
               >
                 <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
@@ -61,7 +76,7 @@ const ClientePage = () => {
 
       {/* Contenido original (productos y texto) */}
       <div className="productos-container">
-        {productos.map((producto) => (
+        {productosPaginaActual.map((producto) => (
           <div key={producto.id} className="producto-card">
             <img src={producto.imagen} alt={producto.nombre} />
             <div>
